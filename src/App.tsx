@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle, 
   Shield, 
@@ -13,12 +14,68 @@ import {
   Play,
   Award,
   ChevronUp,
-  ChevronDown
+  ChevronDown,
+  X
 } from 'lucide-react';
 
+// Dados para as notificações
+const notifications = [
+  { name: "Carlos Silva", city: "São Paulo", product: "Kit de 5 potes" },
+  { name: "Maria Santos", city: "Rio de Janeiro", product: "Kit de 3 potes" },
+  { name: "João Oliveira", city: "Belo Horizonte", product: "Kit de 5 potes" },
+  { name: "Ana Costa", city: "Salvador", product: "Kit de 3 potes" },
+  { name: "Pedro Lima", city: "Fortaleza", product: "Kit de 5 potes" },
+  { name: "Lucia Ferreira", city: "Brasília", product: "Kit de 3 potes" },
+  { name: "Roberto Alves", city: "Curitiba", product: "Kit de 5 potes" },
+  { name: "Carmen Rodriguez", city: "Porto Alegre", product: "Kit de 3 potes" },
+  { name: "Francisco Souza", city: "Recife", product: "Kit de 5 potes" },
+  { name: "Helena Martins", city: "Goiânia", product: "Kit de 3 potes" }
+];
+
 function App() {
+  const [currentNotification, setCurrentNotification] = useState(0);
+  const [showNotification, setShowNotification] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowNotification(false);
+      setTimeout(() => {
+        setCurrentNotification((prev) => (prev + 1) % notifications.length);
+        setShowNotification(true);
+      }, 500);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
+      {/* NOTIFICAÇÃO DE COMPRA */}
+      {showNotification && (
+        <div className="fixed bottom-4 left-4 bg-green-600 text-white p-4 rounded-lg shadow-lg z-50 max-w-sm animate-slide-in">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <div>
+                <p className="text-sm font-bold">
+                  {notifications[currentNotification].name} de {notifications[currentNotification].city}
+                </p>
+                <p className="text-xs opacity-90">
+                  acabou de comprar o {notifications[currentNotification].product}
+                </p>
+                <p className="text-xs opacity-75">há 2 minutos</p>
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowNotification(false)}
+              className="text-white hover:text-gray-200"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* HEADER - HEADLINE (O SOCO NA CARA) */}
       <header className="bg-gradient-to-br from-orange-600 via-orange-500 to-orange-400 text-white py-8 md:py-12 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
@@ -262,9 +319,9 @@ function App() {
                   className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-4 rounded"
                 />
                 <p className="text-base md:text-lg text-orange-600 mb-2">1 Pote - Tratamento 1 Mês</p>
-                <p className="text-sm text-gray-500 line-through">De R$ 97</p>
-                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 39,90</p>
-                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 3,32</p>
+                <p className="text-sm text-gray-500 line-through">De R$ 197</p>
+                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 127,00</p>
+                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 10,58</p>
               </div>
               <button className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 md:py-4 px-4 md:px-6 rounded-lg text-base md:text-lg transition-colors">
                 COMPRAR AGORA
@@ -284,11 +341,11 @@ function App() {
                   className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-4 rounded"
                 />
                 <p className="text-base md:text-lg text-orange-600 mb-2">Tratamento 3 Meses</p>
-                <p className="text-sm text-gray-500 line-through">De R$ 291</p>
-                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 97,70</p>
-                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 8,14</p>
+                <p className="text-sm text-gray-500 line-through">De R$ 381</p>
+                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 197,00</p>
+                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 16,42</p>
                 <div className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs md:text-sm font-bold mt-2">
-                  66% DE DESCONTO
+                  48% DE DESCONTO
                 </div>
                 <p className="text-orange-600 font-bold text-xs md:text-sm mt-2">+ FRETE GRÁTIS</p>
               </div>
@@ -307,11 +364,11 @@ function App() {
                   className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-4 rounded"
                 />
                 <p className="text-base md:text-lg text-orange-600 mb-2">5 Potes - Tratamento 5 Meses</p>
-                <p className="text-sm text-gray-500 line-through">De R$ 485</p>
-                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 127,70</p>
-                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 10,64</p>
+                <p className="text-sm text-gray-500 line-through">De R$ 635</p>
+                <p className="text-2xl md:text-3xl font-bold text-orange-600 mb-2">R$ 247,00</p>
+                <p className="text-xs md:text-sm text-orange-600">ou 12x de R$ 20,58</p>
                 <div className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-xs md:text-sm font-bold mt-2">
-                  74% DE DESCONTO
+                  61% DE DESCONTO
                 </div>
                 <p className="text-orange-600 font-bold text-xs md:text-sm mt-2">+ FRETE GRÁTIS</p>
               </div>
